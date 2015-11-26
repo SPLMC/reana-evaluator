@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # coding=utf-8
 
+from configurations import CONFIGURATIONS, CWD
+
 import os
-import os.path
 import re
 import simplejson as json
 import subprocess
@@ -11,20 +12,7 @@ import numpy
 import matplotlib.pyplot as plt
 
 
-REANA_ROOT = "/home/thiago/Projects/workspace/reana/"
-PARAM_PATH = "/home/thiago/Projects/param/param"
-
-CLASSPATH = ":".join([os.path.join(REANA_ROOT, "bin"),
-                      os.path.join(REANA_ROOT, "libs/*")])
-REANA_MAIN = "java -Xss100m -cp "+CLASSPATH+" ui.CommandLineInterface --all-configurations --stats --param-path="+PARAM_PATH
-
-REANA_ARGS = {"Feature-family-based": "--analysis-strategy=FEATURE_FAMILY",
-              "Feature-product-based": "--analysis-strategy=FEATURE_PRODUCT",
-              "Product-based": "--analysis-strategy=PRODUCT",
-              "Family-based": "--analysis-strategy=FAMILY",
-              "Family-product-based": "--analysis-strategy=FAMILY_PRODUCT"}
-
-NUMBER_OF_RUNS = 20
+NUMBER_OF_RUNS = 1
 
 
 class Stats(object):
@@ -78,10 +66,6 @@ class Stats(object):
         return str(info)
 
 
-def get_executable(strategy):
-    return REANA_MAIN + " " + REANA_ARGS[strategy]
-
-
 def parse_stats(program_output):
     _, _, stats = program_output.partition("Stats:")
     return Stats(stats)
@@ -94,7 +78,7 @@ def run_for_stats(command_line):
     FNULL = open(os.devnull, 'w')
     output = subprocess.check_output(command_line,
                                      shell=True,
-                                     cwd=REANA_ROOT,
+                                     cwd=CWD,
                                      stderr=FNULL)
     return parse_stats(output) 
 
@@ -132,17 +116,16 @@ def plot_time(stats):
 
 if __name__ == '__main__':
     stats = {}
-    for strategy in REANA_ARGS:
-        print strategy
+    for name, command_line in CONFIGURATIONS.iteritems():
+        print name
         print "---------"
-        command_line = get_executable(strategy)
         #temp_stats = [run_for_stats(command_line) for i in xrange(NUMBER_OF_RUNS)]
         temp_stats = list()
         for i in xrange(NUMBER_OF_RUNS):
             temp_stat = run_for_stats(command_line)
             temp_stats.append(temp_stat)
             print temp_stat
-        stats[strategy] = temp_stats
+        stats[name] = temp_stats
         #for stat in temp_stats:
         #    print stat
         print "==========================================================="
