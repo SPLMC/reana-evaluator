@@ -1,7 +1,9 @@
 # coding=utf-8
 
 import os.path
+
 from collections import namedtuple
+from itertools import product
 
 
 __all__ = ['CONFIGURATIONS',
@@ -50,4 +52,5 @@ def get_executable(strategy, spl):
             + get_arg_for_spl(spl))
 
 
-CONFIGURATIONS = {strategy: get_executable(strategy, "BSN") for strategy in ANALYSIS_STRATEGIES}
+CONFIGURATIONS = {strategy+" ("+spl+")": get_executable(strategy, spl)
+        for strategy, spl in product(ANALYSIS_STRATEGIES, AVAILABLE_SPL)}

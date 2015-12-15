@@ -11,8 +11,10 @@ import subprocess
 import numpy
 import matplotlib.pyplot as plt
 
+from datetime import datetime
 
-NUMBER_OF_RUNS = 1
+
+NUMBER_OF_RUNS = 100
 
 
 class Stats(object):
@@ -111,6 +113,8 @@ def plot_time(stats):
     plt.xlabel("Strategy")
     plt.ylabel("Mean time (ms)")
     plt.legend()
+    current_time = datetime.now().isoformat()
+    plt.savefig('mean-runtime'+current_time+'.png', bbox_inches='tight')
     plt.show()
 
 
