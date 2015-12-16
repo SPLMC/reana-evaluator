@@ -94,6 +94,8 @@ def mean_time_with_std_dev(stats):
 
 
 def plot_time(stats):
+    plt.figure(num=1,figsize=(18,10),dpi=80)
+
     bar_width = 0.35
     keys = stats.keys()
     index = numpy.arange(len(keys))
@@ -114,7 +116,9 @@ def plot_time(stats):
     plt.ylabel("Mean time (ms)")
     plt.legend()
     current_time = datetime.now().isoformat()
-    plt.savefig('mean-runtime'+current_time+'.png', bbox_inches='tight')
+    plt.savefig('mean-runtime'+current_time+'.png',
+                format="png",
+                bbox_inches="tight")
     plt.show()
 
 
