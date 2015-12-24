@@ -18,19 +18,29 @@ CLASSPATH = ":".join([os.path.join(REANA_ROOT, "bin"),
                       os.path.join(REANA_ROOT, "libs/*")])
 REANA_MAIN = "java -Xss100m -cp "+CLASSPATH+" ui.CommandLineInterface --all-configurations --stats --param-path="+PARAM_PATH
 
-ANALYSIS_STRATEGIES = {"Feature-family-based": "FEATURE_FAMILY",
-                       "Feature-product-based": "FEATURE_PRODUCT",
-                       "Product-based": "PRODUCT",
-                       "Family-based": "FAMILY",
-                       "Family-product-based": "FAMILY_PRODUCT"}
+ANALYSIS_STRATEGIES = {
+        "Feature-family-based": "FEATURE_FAMILY",
+        "Feature-product-based": "FEATURE_PRODUCT",
+        "Product-based": "PRODUCT",
+        "Family-based": "FAMILY",
+        "Family-product-based": "FAMILY_PRODUCT"
+    }
 
 
 SPL = namedtuple("SPL", ["uml_model", "feature_model"])
 
-AVAILABLE_SPL = {"BSN": SPL(uml_model="BSN_models_without_File.xml",
-                            feature_model="BSN-FM_without_file.txt"),
-                 "Email": SPL(uml_model="Email.xml",
-                              feature_model="email-FM.txt")}
+AVAILABLE_SPL = {
+        "BSN": SPL(uml_model="BSN_models_without_File.xml",
+                   feature_model="BSN-FM_without_file.txt"),
+        "Email": SPL(uml_model="Email.xml",
+                     feature_model="email-FM.txt"),
+        "Cloud": SPL(uml_model="CloudComputing.xml",
+            feature_model="CNF_CloudComputing.txt"),
+        "Lift": SPL(uml_model="LiftSystem.xml",
+                    feature_model="CNF_LiftSystem.txt"),
+        "MinePump": SPL(uml_model="MinePump.xml",
+            feature_model="CNF_MinePump.txt"),
+    }
 
 
 def get_arg_for_strategy(strategy):
