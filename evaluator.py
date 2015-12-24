@@ -47,7 +47,7 @@ def plot_time(stats, name):
     plt.savefig(inResults('mean-runtime-'+name+'.png'),
                 format="png",
                 bbox_inches="tight")
-    plt.show()
+    #plt.show()
 
 def _parse_args():
     '''
@@ -86,4 +86,8 @@ if __name__ == '__main__':
         print RESULTS_DIR, type(RESULTS_DIR)
         all_stats = replay.load(inResults("replay.json"))
 
-    plot_time(all_stats.get_stats_by_spl("BSN"), "BSN")
+    for spl in all_stats.get_spls():
+        plot_time(all_stats.get_stats_by_spl(spl), spl)
+
+    for strategy in all_stats.get_strategies():
+        plot_time(all_stats.get_stats_by_strategy(strategy), strategy)

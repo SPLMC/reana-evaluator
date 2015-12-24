@@ -10,6 +10,12 @@ class AllStats(object):
     def __init__(self, cummulative_stats):
         self.data = cummulative_stats
 
+    def get_spls(self):
+        return set([stats.spl for stats in self.data])
+
+    def get_strategies(self):
+        return set([stats.strategy for stats in self.data])
+
     def get_stats_by_strategy(self, strategy):
         '''
         Returns all stats for the given strategy, indexed by
