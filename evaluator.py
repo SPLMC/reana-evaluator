@@ -1,88 +1,17 @@
 #!/usr/bin/env python
 # coding=utf-8
 
-from configurations import CONFIGURATIONS, CWD
+from runner import run_all_analyses
+import replay
 
+import argparse
 import os
-import re
-import simplejson as json
-import subprocess
-
 import numpy
 import matplotlib.pyplot as plt
 
 from datetime import datetime
 
-
-NUMBER_OF_RUNS = 100
-
-
-class Stats(object):
-    '''
-    Holder of parsed statistics.
-    '''
-    def __init__(self, stats_str):
-        self.time = self._parse_running_time(stats_str)
-        self.memory = self._parse_memory_used(stats_str)
-        self.max_formula_size = self._parse_max_formula_size(stats_str)
-        self.min_formula_size = self._parse_min_formula_size(stats_str)
-        self.all_formulae_sizes = self._parse_all_formulae_sizes(stats_str)
-
-    @property
-    def mean_formula_size(self):
-        try:
-            return float(sum(self.all_formulae_sizes))/len(self.all_formulae_sizes)
-        except TypeError as e:
-            print "Problem with formulae sizes: ", self.all_formulae_sizes
-            return 0.0
-
-    def _parse_running_time(self, stats_str):
-        pattern = re.compile(r"Total running time: (\d+) ms\n")
-        matched = pattern.search(stats_str).group(1)
-        return int(matched)
-
-    def _parse_memory_used(self, stats_str):
-        pattern = re.compile(r"Maximum memory used: (\d+\.?\d*) MB\n")
-        matched = pattern.search(stats_str).group(1)
-        return float(matched)
-
-    def _parse_min_formula_size(self, stats_str):
-        pattern = re.compile(r"Minimum formula size: (\d+)\s*\n")
-        matched = pattern.search(stats_str).group(1)
-        return int(matched)
-
-    def _parse_max_formula_size(self, stats_str):
-        pattern = re.compile(r"Maximum formula size: (\d+)\s*\n")
-        matched = pattern.search(stats_str).group(1)
-        return int(matched)
-
-    def _parse_all_formulae_sizes(self, stats_str):
-        pattern = re.compile(r"All formulae sizes: (\[.*\])\n")
-        sizes = pattern.search(stats_str).group(1)
-        return json.loads(sizes)
-
-    def __str__(self):
-        info = self.__dict__.copy()
-        del info["all_formulae_sizes"]
-        info["mean_formula_size"] = self.mean_formula_size
-        return str(info)
-
-
-def parse_stats(program_output):
-    _, _, stats = program_output.partition("Stats:")
-    return Stats(stats)
-
-
-def run_for_stats(command_line):
-    '''
-    Runs the given executable and returns the resulting statistics.
-    '''
-    FNULL = open(os.devnull, 'w')
-    output = subprocess.check_output(command_line,
-                                     shell=True,
-                                     cwd=CWD,
-                                     stderr=FNULL)
-    return parse_stats(output) 
+inResults = lambda filename: os.path.join(RESULTS_DIR, filename)
 
 def stats_to_list(stat_name, stats_list):
     return map(lambda stats: getattr(stats, stat_name),
@@ -93,7 +22,7 @@ def mean_time_with_std_dev(stats):
     return (numpy.mean(times), numpy.std(times))
 
 
-def plot_time(stats):
+def plot_time(stats, name):
     plt.figure(num=1,figsize=(18,10),dpi=80)
 
     bar_width = 0.35
@@ -115,27 +44,38 @@ def plot_time(stats):
     plt.xlabel("Strategy")
     plt.ylabel("Mean time (ms)")
     plt.legend()
-    current_time = datetime.now().isoformat()
-    plt.savefig('mean-runtime'+current_time+'.png',
+    plt.savefig(inResults('mean-runtime-'+name+'.png'),
                 format="png",
                 bbox_inches="tight")
     plt.show()
 
+def _parse_args():
+    '''
+    Parses command-line args.
+
+    Return object:
+        - replay_dir: the directory in which the replay data is stored,
+            or None if not in replay mode.
+    '''
+    parser = argparse.ArgumentParser(description="Run ReAna's strategies for a number of SPLs.")
+    parser.add_argument('--replay',
+                        dest='replay_dir',
+                        action='store',
+                        help="Enters replay mode, using the given directory")
+    return parser.parse_args()
+
 
 if __name__ == '__main__':
-    stats = {}
-    for name, command_line in CONFIGURATIONS.iteritems():
-        print name
-        print "---------"
-        #temp_stats = [run_for_stats(command_line) for i in xrange(NUMBER_OF_RUNS)]
-        temp_stats = list()
-        for i in xrange(NUMBER_OF_RUNS):
-            temp_stat = run_for_stats(command_line)
-            temp_stats.append(temp_stat)
-            print temp_stat
-        stats[name] = temp_stats
-        #for stat in temp_stats:
-        #    print stat
-        print "==========================================================="
+    args = _parse_args()
 
-    plot_time(stats)
+    if args.replay_dir is None:
+        RESULTS_DIR = "results-"+ datetime.now().isoformat()
+        os.mkdir(RESULTS_DIR)
+        all_stats = run_all_analyses()
+        replay.save(all_stats, inResults("replay.json"))
+    else:
+        RESULTS_DIR = args.replay_dir
+        print RESULTS_DIR, type(RESULTS_DIR)
+        all_stats = replay.load(inResults("replay.json"))
+
+    plot_time(all_stats.get_stats_by_spl("BSN"), "BSN")

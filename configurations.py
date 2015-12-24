@@ -52,5 +52,5 @@ def get_executable(strategy, spl):
             + get_arg_for_spl(spl))
 
 
-CONFIGURATIONS = {strategy+" ("+spl+")": get_executable(strategy, spl)
+CONFIGURATIONS = {(spl, strategy): get_executable(strategy, spl)
         for strategy, spl in product(ANALYSIS_STRATEGIES, AVAILABLE_SPL)}
