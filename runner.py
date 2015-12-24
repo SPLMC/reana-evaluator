@@ -8,10 +8,7 @@ from configurations import CONFIGURATIONS, CWD
 from stats import AllStats, CummulativeStats, Stats
 
 
-NUMBER_OF_RUNS = 1
-
-
-def run_all_analyses():
+def run_all_analyses(number_of_runs):
     '''
     Runs all analyses for all SPLs and returns an AllStats object.
     '''
@@ -20,14 +17,14 @@ def run_all_analyses():
         name = strategy + " ("+spl+")"
         print name
         print "---------"
-        stats = run_analysis(spl, strategy, command_line)
+        stats = run_analysis(spl, strategy, command_line, number_of_runs)
         all_stats.append(stats)
         print "===================================="
     return AllStats(all_stats)
 
 
-def run_analysis(spl, strategy, command_line):
-    data = [_run_for_stats(command_line) for i in xrange(NUMBER_OF_RUNS)]
+def run_analysis(spl, strategy, command_line, number_of_runs):
+    data = [_run_for_stats(command_line) for i in xrange(number_of_runs)]
     return CummulativeStats(spl, strategy, data)
 
 

@@ -54,6 +54,8 @@ def _parse_args():
     Parses command-line args.
 
     Return object:
+        - num_runs: the number of runs for each SPL-strategy pair (if
+            not replaying).
         - replay_dir: the directory in which the replay data is stored,
             or None if not in replay mode.
     '''
@@ -62,6 +64,12 @@ def _parse_args():
                         dest='replay_dir',
                         action='store',
                         help="Enters replay mode, using the given directory")
+    parser.add_argument('--runs',
+                        dest='num_runs',
+                        action='store',
+                        type=int,
+                        default=1,
+                        help="Number of runs for each SPL-strategy pair (default: %(default)s)")
     return parser.parse_args()
 
 
@@ -71,7 +79,7 @@ if __name__ == '__main__':
     if args.replay_dir is None:
         RESULTS_DIR = "results-"+ datetime.now().isoformat()
         os.mkdir(RESULTS_DIR)
-        all_stats = run_all_analyses()
+        all_stats = run_all_analyses(args.num_runs)
         replay.save(all_stats, inResults("replay.json"))
     else:
         RESULTS_DIR = args.replay_dir
