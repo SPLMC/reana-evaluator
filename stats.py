@@ -1,4 +1,5 @@
 # coding=utf-8
+from collections import OrderedDict
 
 
 class AllStats(object):
@@ -14,16 +15,18 @@ class AllStats(object):
         Returns all stats for the given strategy, indexed by
         the analyzed SPL.
         '''
-        return {stats.spl: stats.data for stats in self.data
+        indexed = {stats.spl: stats.data for stats in self.data
                     if stats.strategy == strategy}
+        return OrderedDict(sorted(indexed.items()))
 
     def get_stats_by_spl(self, spl):
         '''
         Returns all stats for the given SPL, indexed by
         the analysis strategy.
         '''
-        return {stats.strategy: stats.data for stats in self.data
+        indexed = {stats.strategy: stats.data for stats in self.data
                     if stats.spl == spl}
+        return OrderedDict(sorted(indexed.items()))
 
 
 class CummulativeStats(object):
