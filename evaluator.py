@@ -47,7 +47,7 @@ def plot_time(stats, name):
     plt.savefig(inResults('mean-runtime-'+name+'.png'),
                 format="png",
                 bbox_inches="tight")
-    #plt.show()
+    plt.close()
 
 def _parse_args():
     '''
