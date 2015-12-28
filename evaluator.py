@@ -2,52 +2,16 @@
 # coding=utf-8
 
 from runner import run_all_analyses
+from plotter import *
 import replay
 
 import argparse
 import os
-import numpy
-import matplotlib.pyplot as plt
 
 from datetime import datetime
 
-inResults = lambda filename: os.path.join(RESULTS_DIR, filename)
+in_results = lambda filename: os.path.join(RESULTS_DIR, filename)
 
-def stats_to_list(stat_name, stats_list):
-    return map(lambda stats: getattr(stats, stat_name),
-               stats_list)
-
-def mean_time_with_std_dev(stats):
-    times = stats_to_list("time", stats)
-    return (numpy.mean(times), numpy.std(times))
-
-
-def plot_time(stats, name):
-    plt.figure(num=1,figsize=(18,10),dpi=80)
-
-    bar_width = 0.35
-    keys = stats.keys()
-    index = numpy.arange(len(keys))
-    times = list()
-    std_devs = list()
-    for key in keys:
-        stat = stats[key]
-        mean_time, std_dev = mean_time_with_std_dev(stat)
-        times.append(mean_time)
-        std_devs.append(std_dev)
-
-    plt.bar(index, times, bar_width,
-            color='y',
-            yerr=std_devs,
-            label="Strategies")
-    plt.xticks(index + bar_width/2, keys)
-    plt.xlabel("Strategy")
-    plt.ylabel("Mean time (ms)")
-    plt.legend()
-    plt.savefig(inResults('mean-runtime-'+name+'.png'),
-                format="png",
-                bbox_inches="tight")
-    plt.close()
 
 def _parse_args():
     '''
@@ -80,14 +44,30 @@ if __name__ == '__main__':
         RESULTS_DIR = "results-"+ datetime.now().isoformat()
         os.mkdir(RESULTS_DIR)
         all_stats = run_all_analyses(args.num_runs)
-        replay.save(all_stats, inResults("replay.json"))
+        replay.save(all_stats, in_results("replay.json"))
     else:
         RESULTS_DIR = args.replay_dir
         print RESULTS_DIR, type(RESULTS_DIR)
-        all_stats = replay.load(inResults("replay.json"))
+        all_stats = replay.load(in_results("replay.json"))
 
     for spl in all_stats.get_spls():
-        plot_time(all_stats.get_stats_by_spl(spl), spl)
+        stats_by_spl = all_stats.get_stats_by_spl(spl)
+        plot_time(stats_by_spl,
+                  spl,
+                  path_placer=in_results)
+        for prop in ["time", "memory"]:
+            boxplot_property(stats_by_spl,
+                             spl,
+                             prop,
+                             path_placer=in_results)
 
     for strategy in all_stats.get_strategies():
-        plot_time(all_stats.get_stats_by_strategy(strategy), strategy)
+        stats_by_strategy = all_stats.get_stats_by_strategy(strategy)
+        plot_time(stats_by_strategy,
+                  strategy,
+                  path_placer=in_results)
+        for prop in ["time", "memory"]:
+            boxplot_property(stats_by_strategy,
+                             strategy,
+                             prop,
+                             path_placer=in_results)
