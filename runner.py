@@ -37,7 +37,9 @@ def _run_for_stats(command_line):
                                      shell=True,
                                      cwd=CWD,
                                      stderr=FNULL)
-    return _parse_stats(output) 
+    result = _parse_stats(output)
+    print result
+    return result
 
 
 def _parse_stats(program_output):
