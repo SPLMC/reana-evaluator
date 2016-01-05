@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # coding=utf-8
 
+from dataanalyzer import descriptive_analysis, test_hypotheses
 from runner import run_all_analyses
-from plotter import *
 import replay
 
 import argparse
@@ -47,27 +47,7 @@ if __name__ == '__main__':
         replay.save(all_stats, in_results("replay.json"))
     else:
         RESULTS_DIR = args.replay_dir
-        print RESULTS_DIR, type(RESULTS_DIR)
         all_stats = replay.load(in_results("replay.json"))
 
-    for spl in all_stats.get_spls():
-        stats_by_spl = all_stats.get_stats_by_spl(spl)
-        plot_time(stats_by_spl,
-                  spl,
-                  path_placer=in_results)
-        for prop in ["time", "memory"]:
-            boxplot_property(stats_by_spl,
-                             spl,
-                             prop,
-                             path_placer=in_results)
-
-    for strategy in all_stats.get_strategies():
-        stats_by_strategy = all_stats.get_stats_by_strategy(strategy)
-        plot_time(stats_by_strategy,
-                  strategy,
-                  path_placer=in_results)
-        for prop in ["time", "memory"]:
-            boxplot_property(stats_by_strategy,
-                             strategy,
-                             prop,
-                             path_placer=in_results)
+    descriptive_analysis(all_stats)
+    test_hypotheses(all_stats)
