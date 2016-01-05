@@ -35,11 +35,13 @@ AVAILABLE_SPL = {
         "Email": SPL(uml_model="Email.xml",
                      feature_model="email-FM.txt"),
         "Cloud": SPL(uml_model="CloudComputing.xml",
-            feature_model="CNF_CloudComputing.txt"),
+                     feature_model="CNF_CloudComputing.txt"),
         "Lift": SPL(uml_model="LiftSystem.xml",
                     feature_model="CNF_LiftSystem.txt"),
         "MinePump": SPL(uml_model="MinePump.xml",
-            feature_model="CNF_MinePump.txt"),
+                        feature_model="CNF_MinePump.txt"),
+        "TankWar": SPL(uml_model="TankWar.xml",
+                       feature_model="CNF_Tankwar.txt"),
     }
 
 
