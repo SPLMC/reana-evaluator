@@ -39,30 +39,31 @@ def plot_time(stats, name, path_placer=lambda path: path):
     plt.close()
 
 
-def boxplot_time(stats, name, path_placer=lambda path: path):
-    boxplot_property(stats, name, "time", path_placer)
-
-
 def boxplot_property(stats,
                      target_name,
                      property_name,
-                     path_placer=lambda path: path):
+                     path_placer=lambda path: path,
+                     log=False):
     data = OrderedDict()
     for key, stats in stats.iteritems():
         data[key] = stats_to_list(property_name, stats)
     _boxplot_base(data,
                   target_name,
                   property_name,
-                  path_placer)
+                  path_placer,
+                  log)
 
 
 def _boxplot_base(data,
                   target_name,
                   property_name,
-                  path_placer=lambda path: path):
+                  path_placer=lambda path: path,
+                  log=False):
     plt.figure(num=1,figsize=(18,10),dpi=80)
 
     plots = data.values()
+    if log:
+        plt.yscale('log')
     plt.boxplot(plots)
     plt.xticks(range(1, len(plots)+1),
                data.keys(),
