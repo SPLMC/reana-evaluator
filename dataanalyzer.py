@@ -66,19 +66,18 @@ def _test_spl_time(spl, time_by_strategy):
     aggregated_details = {}
     for pair in pairs:
         strat1, strat2 = pair
-        print "\t", strat1, "X", strat2
         sample1 = time_by_strategy[strat1]
         sample2 = time_by_strategy[strat2]
 
         result, details = _compare_samples(sample1, sample2)
-        if result < 0:
-            print "\t\t", strat2, "is significantly higher."
-        elif result > 0:
-            print "\t\t", strat1, "is significantly higher."
-        else:
-            print "\t\t", strat1, "==", strat2
+        if result == 0:
+            print "\t", strat1, "and", strat2, "are not significantly different"
         
         aggregated_details[pair] = details
+
+    means = {strategy: mean(time_by_strategy[strategy]) for strategy in strategies}
+    ordered = sorted(means.items(), key=lambda item: item[1])
+    print "\t", " < ".join(map(str,ordered))
     return aggregated_details
 
 
