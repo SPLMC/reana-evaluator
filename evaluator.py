@@ -49,5 +49,5 @@ if __name__ == '__main__':
         RESULTS_DIR = args.replay_dir
         all_stats = replay.load(in_results("replay.json"))
 
-    descriptive_analysis(all_stats)
+    descriptive_analysis(all_stats, path_placer=in_results)
     test_hypotheses(all_stats)

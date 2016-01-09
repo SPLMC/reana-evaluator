@@ -11,37 +11,37 @@ NORMALITY_TEST = normaltest
 #NORMALITY_TEST = shapiro
 
 
-def descriptive_analysis(all_stats):
+def descriptive_analysis(all_stats, path_placer=lambda path: path):
     for spl in all_stats.get_spls():
         stats_by_spl = all_stats.get_stats_by_spl(spl)
         plot_time(stats_by_spl,
                   spl,
-                  path_placer=in_results)
-        for prop in ["time", "memory"]:
+                  path_placer)
+        for prop in ["analysis_time", "memory"]:
             boxplot_property(stats_by_spl,
                              spl,
                              prop,
-                             path_placer=in_results)
+                             path_placer)
             boxplot_property(stats_by_spl,
                              spl+"-logarithmic",
                              prop,
-                             path_placer=in_results,
+                             path_placer,
                              log=True)
 
     for strategy in all_stats.get_strategies():
         stats_by_strategy = all_stats.get_stats_by_strategy(strategy)
         plot_time(stats_by_strategy,
                   strategy,
-                  path_placer=in_results)
-        for prop in ["time", "memory"]:
+                  path_placer)
+        for prop in ["analysis_time", "memory"]:
             boxplot_property(stats_by_strategy,
                              strategy,
                              prop,
-                             path_placer=in_results)
+                             path_placer)
             boxplot_property(stats_by_strategy,
                              strategy+"-logarithmic",
                              prop,
-                             path_placer=in_results,
+                             path_placer,
                              log=True)
 
 
@@ -50,7 +50,7 @@ def test_hypotheses(all_stats):
     stats = {spl: all_stats.get_stats_by_spl(spl) for spl in spls}
     aggregated_details = {}
     for spl, stats_by_strategy in stats.iteritems():
-        time_by_strategy = {strategy: stats_to_list("time", stat_list)
+        time_by_strategy = {strategy: stats_to_list("analysis_time", stat_list)
                                 for strategy, stat_list in stats_by_strategy.iteritems()}
         details = _test_spl_time(spl, time_by_strategy)
         aggregated_details[spl] = details
@@ -89,6 +89,7 @@ def _compare_samples(sample1, sample2):
     '''
     mean1 = mean(sample1)
     mean2 = mean(sample2)
+    gain = max(mean1, mean2)/min(mean1, mean2)
 
     if not _is_normally_distributed(sample1) or not _is_normally_distributed(sample2):
         normality = "Not all are normal"
@@ -104,7 +105,8 @@ def _compare_samples(sample1, sample2):
     aggregated_details = (normality,
                           details,
                           {"mean 1": mean1,
-                           "mean 2": mean2})
+                           "mean 2": mean2,
+                           "gain": str(gain) + "x"})
     
     return result, aggregated_details
 

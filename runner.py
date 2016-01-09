@@ -33,10 +33,15 @@ def _run_for_stats(command_line):
     Runs the given executable and returns the resulting statistics.
     '''
     FNULL = open(os.devnull, 'w')
-    output = subprocess.check_output(command_line,
-                                     shell=True,
-                                     cwd=CWD,
-                                     stderr=FNULL)
+    try:
+        output = subprocess.check_output(command_line,
+                                         shell=True,
+                                         cwd=CWD,
+                                         stderr=FNULL)
+    except subprocess.CalledProcessError as e:
+        print e
+        print e.output
+        return None
     result = _parse_stats(output)
     print result
     return result
@@ -46,12 +51,14 @@ def _parse_stats(program_output):
     _, _, stats_str = program_output.partition("Stats:")
 
     time = _parse_running_time(stats_str)
+    analysis_time = _parse_analysis_time(stats_str)
     memory = _parse_memory_used(stats_str)
     max_formula_size = _parse_max_formula_size(stats_str)
     min_formula_size = _parse_min_formula_size(stats_str)
     all_formulae_sizes = _parse_all_formulae_sizes(stats_str)
 
     return Stats(time,
+                 analysis_time,
                  memory,
                  max_formula_size,
                  min_formula_size,
@@ -59,6 +66,11 @@ def _parse_stats(program_output):
 
 def _parse_running_time(stats_str):
     pattern = re.compile(r"Total running time: (\d+) ms\n")
+    matched = pattern.search(stats_str).group(1)
+    return int(matched)
+
+def _parse_analysis_time(stats_str):
+    pattern = re.compile(r"Total analysis time: (\d+) ms\n")
     matched = pattern.search(stats_str).group(1)
     return int(matched)
 

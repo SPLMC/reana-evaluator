@@ -9,7 +9,7 @@ def stats_to_list(stat_name, stats_list):
                stats_list)
 
 def mean_time_with_std_dev(stats):
-    times = stats_to_list("time", stats)
+    times = stats_to_list("analysis_time", stats)
     return (numpy.mean(times), numpy.std(times))
 
 
@@ -33,7 +33,7 @@ def plot_time(stats, name, path_placer=lambda path: path):
             yerr=std_devs)
     plt.xticks(index + bar_width/2, keys)
     plt.ylabel("Mean time (ms)")
-    plt.savefig(path_placer('mean-runtime-logarithmic-'+name+'.png'),
+    plt.savefig(path_placer('mean-analysis-time-logarithmic-'+name+'.png'),
                 format="png",
                 bbox_inches="tight")
     plt.close()

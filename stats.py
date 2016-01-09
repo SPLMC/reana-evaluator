@@ -55,12 +55,14 @@ class Stats(object):
     '''
     Holder of parsed statistics for a single ReAna run.
     '''
-    def __init__(self, time,
+    def __init__(self, total_time,
+                       analysis_time,
                        memory,
                        max_formula_size,
                        min_formula_size,
                        all_formulae_sizes):
-        self.time = time
+        self.total_time = total_time
+        self.analysis_time = analysis_time
         self.memory = memory
         self.max_formula_size = max_formula_size
         self.min_formula_size = min_formula_size
