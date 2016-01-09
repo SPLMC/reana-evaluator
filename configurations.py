@@ -16,7 +16,7 @@ CWD = REANA_ROOT
 
 CLASSPATH = ":".join([os.path.join(REANA_ROOT, "bin"),
                       os.path.join(REANA_ROOT, "libs/*")])
-REANA_MAIN = "java -Xss100m -cp "+CLASSPATH+" ui.CommandLineInterface --all-configurations --stats --param-path="+PARAM_PATH
+REANA_MAIN = "java -Xss100m -cp "+CLASSPATH+" ui.CommandLineInterface --all-configurations --suppress-report --stats --param-path="+PARAM_PATH
 
 ANALYSIS_STRATEGIES = {
         "Feature-family-based": "FEATURE_FAMILY",
@@ -64,5 +64,19 @@ def get_executable(strategy, spl):
             + get_arg_for_spl(spl))
 
 
-CONFIGURATIONS = {(spl, strategy): get_executable(strategy, spl)
-        for strategy, spl in product(ANALYSIS_STRATEGIES, AVAILABLE_SPL)}
+FEATURE_BASED = {(spl, strategy): get_executable(strategy, spl)
+        for strategy, spl in product(["Feature-family-based", "Feature-product-based"],
+                                     AVAILABLE_SPL)}
+del FEATURE_BASED[("TankWar", "Feature-product-based")]
+
+PRODUCT_BASED = {(spl, "Product-based"): get_executable("Product-based", spl)
+        for spl in ["BSN", "Email", "Lift", "MinePump"]}
+
+FAMILY_BASED = {(spl, strategy): get_executable(strategy, spl)
+        for strategy, spl in product(["Family-based", "Family-product-based"],
+                                     ["BSN", "Email", "Lift"])}
+
+CONFIGURATIONS = {}
+CONFIGURATIONS.update(FEATURE_BASED)
+CONFIGURATIONS.update(PRODUCT_BASED)
+CONFIGURATIONS.update(FAMILY_BASED)

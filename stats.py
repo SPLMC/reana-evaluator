@@ -32,7 +32,13 @@ class AllStats(object):
         '''
         indexed = {stats.strategy: stats.data for stats in self.data
                     if stats.spl == spl}
-        return OrderedDict(sorted(indexed.items()))
+        strategies = ["Feature-family-based",
+                      "Feature-product-based",
+                      "Product-based",
+                      "Family-based",
+                      "Family-product-based"]
+        return OrderedDict(sorted(indexed.items(),
+                                  key=lambda item: strategies.index(item[0])))
 
 
 class CummulativeStats(object):
