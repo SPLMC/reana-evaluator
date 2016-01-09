@@ -2,6 +2,7 @@
 from numpy import mean
 from scipy.stats import *
 import itertools
+import pprint
 
 from plotter import *
 
@@ -48,26 +49,31 @@ def descriptive_analysis(all_stats, path_placer=lambda path: path):
 def test_hypotheses(all_stats):
     spls = all_stats.get_spls()
     stats = {spl: all_stats.get_stats_by_spl(spl) for spl in spls}
-    aggregated_details = {}
-    for spl, stats_by_strategy in stats.iteritems():
-        time_by_strategy = {strategy: stats_to_list("analysis_time", stat_list)
-                                for strategy, stat_list in stats_by_strategy.iteritems()}
-        details = _test_spl_time(spl, time_by_strategy)
-        aggregated_details[spl] = details
-    import pprint
-    pprint.pprint(aggregated_details, indent=2)
+    for stat_name in ["analysis_time", "memory"]:
+        print "==============================="
+        print stat_name
+        print "-------------------------------"
+        aggregated_details = {}
+        for spl, stats_by_strategy in stats.iteritems():
+            print "Testing", stat_name,"for", spl
+            details = _test_spl_stat(spl,
+                                     stats_by_strategy,
+                                     stat_name)
+            aggregated_details[spl] = details
+        pprint.pprint(aggregated_details, indent=2)
 
 
-def _test_spl_time(spl, time_by_strategy):
-    print "Testing for", spl
-    time_samples = time_by_strategy.values()
-    strategies = time_by_strategy.keys()
+def _test_spl_stat(spl, stats_by_strategy, stat_name):
+    samples_by_strategy = {strategy: stats_to_list(stat_name, stat_list)
+                            for strategy, stat_list in stats_by_strategy.iteritems()}
+
+    strategies = samples_by_strategy.keys()
     pairs = itertools.combinations(strategies, 2)
     aggregated_details = {}
     for pair in pairs:
         strat1, strat2 = pair
-        sample1 = time_by_strategy[strat1]
-        sample2 = time_by_strategy[strat2]
+        sample1 = samples_by_strategy[strat1]
+        sample2 = samples_by_strategy[strat2]
 
         result, details = _compare_samples(sample1, sample2)
         if result == 0:
@@ -75,7 +81,7 @@ def _test_spl_time(spl, time_by_strategy):
         
         aggregated_details[pair] = details
 
-    means = {strategy: mean(time_by_strategy[strategy]) for strategy in strategies}
+    means = {strategy: mean(samples_by_strategy[strategy]) for strategy in strategies}
     ordered = sorted(means.items(), key=lambda item: item[1])
     print "\t", " < ".join(map(str,ordered))
     return aggregated_details
