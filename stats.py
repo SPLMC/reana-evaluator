@@ -1,5 +1,6 @@
 # coding=utf-8
 from collections import OrderedDict
+import numpy
 
 
 class AllStats(object):
@@ -64,15 +65,23 @@ class Stats(object):
     def __init__(self, total_time,
                        analysis_time,
                        memory,
+                       inner_memory,
                        max_formula_size,
                        min_formula_size,
-                       all_formulae_sizes):
+                       all_formulae_sizes,
+                       all_model_checking_times=None,
+                       elapsed_model_checking_time=0,
+                       elapsed_expression_solving_time=0):
         self.total_time = total_time
         self.analysis_time = analysis_time
         self.memory = memory
+        self.inner_memory = inner_memory or memory
         self.max_formula_size = max_formula_size
         self.min_formula_size = min_formula_size
         self.all_formulae_sizes = all_formulae_sizes
+        self.all_model_checking_times = all_model_checking_times
+        self.elapsed_model_checking_time = elapsed_model_checking_time
+        self.elapsed_expression_solving_time = elapsed_expression_solving_time
 
     @property
     def mean_formula_size(self):
@@ -82,8 +91,26 @@ class Stats(object):
             print "Problem with formulae sizes: ", self.all_formulae_sizes
             return 0.0
 
+    @property
+    def mean_model_checking_time(self):
+        try:
+            return numpy.mean(self.all_model_checking_times)
+        except TypeError as e:
+            print "Problem with model checking times: ", self.all_model_checking_times
+            return 0.0
+
+    @property
+    def sequential_model_checking_time(self):
+        try:
+            return sum(self.all_model_checking_times)
+        except TypeError as e:
+            print "Problem with model checking times: ", self.all_model_checking_times
+            return 0.0
+
     def __str__(self):
         info = self.__dict__.copy()
         del info["all_formulae_sizes"]
+        del info["all_model_checking_times"]
         info["mean_formula_size"] = self.mean_formula_size
+        info["mean_model_checking_time"] = self.mean_model_checking_time
         return str(info)

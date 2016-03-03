@@ -7,18 +7,35 @@ import pprint
 from plotter import *
 
 
-SIGNIFICANCE = 0.05
+SIGNIFICANCE = 0.01
 NORMALITY_TEST = normaltest
 #NORMALITY_TEST = shapiro
 
 
 def descriptive_analysis(all_stats, path_placer=lambda path: path):
+    for criterion in ['features', 'configurations']:
+        plot_aggregate(all_stats, "analysis_time", "Analysis time (ms)", criterion, path_placer, plot_infinity=False, limit_padding=1.6)
+        plot_aggregate(all_stats, "total_time", "Total time (ms)", criterion, path_placer, plot_infinity=False, limit_padding=1.6)
+        plot_aggregate(all_stats, "memory", "Peak memory (MB)", criterion, path_placer, plot_infinity=False, log=False)
+
+        plot_aggregate(all_stats, "mean_model_checking_time", "Mean model checking time (ms)", criterion, path_placer, plot_infinity=False, limit_padding=1.6, minimum=1, log=False)
+        plot_aggregate(all_stats, "sequential_model_checking_time", "Sequential model checking time (ms)", criterion, path_placer, plot_infinity=False, limit_padding=1.6, minimum=1, log=False)
+        plot_aggregate(all_stats, "elapsed_model_checking_time", "Elapsed model checking time (ms)", criterion, path_placer, plot_infinity=False, limit_padding=1.6, minimum=1, log=False)
+        plot_aggregate(all_stats, "elapsed_expression_solving_time", "Elapsed expression solving time (ms)", criterion, path_placer, plot_infinity=False, limit_padding=1.6, minimum=1, log=False)
+
+    props = ["analysis_time",
+             "memory",
+             "mean_model_checking_time",
+             "sequential_model_checking_time",
+             "elapsed_model_checking_time",
+             "elapsed_expression_solving_time"]
+
     for spl in all_stats.get_spls():
         stats_by_spl = all_stats.get_stats_by_spl(spl)
         plot_time(stats_by_spl,
                   spl,
                   path_placer)
-        for prop in ["analysis_time", "memory"]:
+        for prop in props:
             boxplot_property(stats_by_spl,
                              spl,
                              prop,
@@ -34,7 +51,7 @@ def descriptive_analysis(all_stats, path_placer=lambda path: path):
         plot_time(stats_by_strategy,
                   strategy,
                   path_placer)
-        for prop in ["analysis_time", "memory"]:
+        for prop in props:
             boxplot_property(stats_by_strategy,
                              strategy,
                              prop,

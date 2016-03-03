@@ -59,7 +59,7 @@ def get_executable(strategy, spl):
     '''
     Returns the corresponding executable for the given analysis configuration.
     '''
-    return (REANA_MAIN + " "
+    return ("/usr/bin/time -v " + REANA_MAIN + " "
             + get_arg_for_strategy(strategy) + " "
             + get_arg_for_spl(spl))
 
