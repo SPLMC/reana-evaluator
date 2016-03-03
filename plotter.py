@@ -39,7 +39,7 @@ def plot_time(stats, name, path_placer=lambda path: path):
     plt.close()
 
 
-def plot_aggregate(all_stats, prop, label, criterion, path_placer, plot_infinity=True, log=True, limit_padding=1.1):
+def plot_aggregate(all_stats, prop, label, criterion, path_placer, plot_infinity=True, log=True, limit_padding=1.1, minimum=10):
     plt.figure()
     if log:
         plt.yscale('log')
@@ -99,7 +99,7 @@ def plot_aggregate(all_stats, prop, label, criterion, path_placer, plot_infinity
                #rotation=45
                )
     plt.legend(loc='lower left', ncol=2, bbox_to_anchor=(0, 1.02))
-    plt.axis([0.7, 6.3, 10, max_means*limit_padding])
+    plt.axis([0.7, 6.3, minimum, max_means*limit_padding])
 
     plt.savefig(path_placer('mean-'+prop+'-'+criterion+'_ascending-'+('logarithmic-' if log else '')+'ALL.png'),
                 format="png",
