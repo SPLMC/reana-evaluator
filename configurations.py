@@ -10,8 +10,9 @@ __all__ = ['CONFIGURATIONS',
            'CWD']
 
 
-REANA_ROOT = "tools"
-PARAM_PATH = "tools"
+TOOLS_PATH = "tools"
+REANA_ROOT = TOOLS_PATH
+PARAM_PATH = os.path.join(TOOLS_PATH, "param")
 MODELS_PATH = "models"
 CWD = '.'
 
