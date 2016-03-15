@@ -10,13 +10,13 @@ __all__ = ['CONFIGURATIONS',
            'CWD']
 
 
-REANA_ROOT = "/home/thiago/Projects/workspace/reana/"
-PARAM_PATH = "/home/thiago/Projects/param/param"
-CWD = REANA_ROOT
+REANA_ROOT = "tools"
+PARAM_PATH = "tools"
+MODELS_PATH = "models"
+CWD = '.'
 
-CLASSPATH = ":".join([os.path.join(REANA_ROOT, "bin"),
-                      os.path.join(REANA_ROOT, "libs/*")])
-REANA_MAIN = "java -Xss100m -cp "+CLASSPATH+" ui.CommandLineInterface --all-configurations --suppress-report --stats --param-path="+PARAM_PATH
+JAR = os.path.join(REANA_ROOT, "reana-spl.jar")
+REANA_MAIN = "java -Xss100m -jar "+JAR+" --all-configurations --suppress-report --stats --param-path="+PARAM_PATH
 
 ANALYSIS_STRATEGIES = {
         "Feature-family-based": "FEATURE_FAMILY",
@@ -51,8 +51,8 @@ def get_arg_for_strategy(strategy):
 
 def get_arg_for_spl(spl):
     spl = AVAILABLE_SPL[spl]
-    return ("--feature-model=" + spl.feature_model + " " +
-            "--uml-model="+spl.uml_model)
+    return ("--feature-model=" + os.path.join(MODELS_PATH, spl.feature_model) + " " +
+            "--uml-model=" + os.path.join(MODELS_PATH, spl.uml_model))
 
 
 def get_executable(strategy, spl):
@@ -80,6 +80,9 @@ CONFIGURATIONS = {}
 CONFIGURATIONS.update(FEATURE_BASED)
 CONFIGURATIONS.update(PRODUCT_BASED)
 CONFIGURATIONS.update(FAMILY_BASED)
+
+# These 3 take a long time to run (between 1.5 and 3.5 hours), so it is best
+#to run them separately and then merge the results in replay.json.
 
 #CONFIGURATIONS = {
 #        ("MinePump", "Family-based"): get_executable("Family-based", "MinePump"),
