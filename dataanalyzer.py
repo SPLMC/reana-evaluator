@@ -14,21 +14,17 @@ NORMALITY_TEST = normaltest
 
 def descriptive_analysis(all_stats, path_placer=lambda path: path):
     for criterion in ['features', 'configurations']:
+        plot_aggregate_barplots(all_stats, "analysis_time", "Analysis time (ms)", criterion, path_placer, plot_infinity=False, limit_padding=1.2, log=True)
+        plot_aggregate_barplots(all_stats, "memory", "Peak memory (MB)", criterion, path_placer, plot_infinity=False, log=False)
+        plot_aggregate_boxplots(all_stats, "analysis_time", "Analysis time (ms)", criterion, path_placer, plot_infinity=False, limit_padding=1.2, log=True, minimum=0.1)
+        plot_aggregate_boxplots(all_stats, "memory", "Peak memory (MB)", criterion, path_placer, plot_infinity=False, log=False)
+
         plot_aggregate(all_stats, "analysis_time", "Analysis time (ms)", criterion, path_placer, plot_infinity=False, limit_padding=1.6)
         plot_aggregate(all_stats, "total_time", "Total time (ms)", criterion, path_placer, plot_infinity=False, limit_padding=1.6)
         plot_aggregate(all_stats, "memory", "Peak memory (MB)", criterion, path_placer, plot_infinity=False, log=False)
 
-        plot_aggregate(all_stats, "mean_model_checking_time", "Mean model checking time (ms)", criterion, path_placer, plot_infinity=False, limit_padding=1.6, minimum=1, log=False)
-        plot_aggregate(all_stats, "sequential_model_checking_time", "Sequential model checking time (ms)", criterion, path_placer, plot_infinity=False, limit_padding=1.6, minimum=1, log=False)
-        plot_aggregate(all_stats, "elapsed_model_checking_time", "Elapsed model checking time (ms)", criterion, path_placer, plot_infinity=False, limit_padding=1.6, minimum=1, log=False)
-        plot_aggregate(all_stats, "elapsed_expression_solving_time", "Elapsed expression solving time (ms)", criterion, path_placer, plot_infinity=False, limit_padding=1.6, minimum=1, log=False)
-
     props = ["analysis_time",
-             "memory",
-             "mean_model_checking_time",
-             "sequential_model_checking_time",
-             "elapsed_model_checking_time",
-             "elapsed_expression_solving_time"]
+             "memory"]
 
     for spl in all_stats.get_spls():
         stats_by_spl = all_stats.get_stats_by_spl(spl)
@@ -91,6 +87,16 @@ def _test_spl_stat(spl, stats_by_strategy, stat_name):
         strat1, strat2 = pair
         sample1 = samples_by_strategy[strat1]
         sample2 = samples_by_strategy[strat2]
+
+        error = None
+        if len(sample1) < 8:
+            error = strat1
+        elif len(sample2) < 8:
+            error = strat2
+
+        if error is not None:
+            print "\tStrategy %s has not enough samples. Skipping..." % error
+            continue
 
         result, details = _compare_samples(sample1, sample2)
         if result == 0:

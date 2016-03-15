@@ -70,8 +70,8 @@ class Stats(object):
                        min_formula_size,
                        all_formulae_sizes,
                        all_model_checking_times=None,
-                       elapsed_model_checking_time=0,
-                       elapsed_expression_solving_time=0):
+                       elapsed_model_checking_time=numpy.nan,
+                       elapsed_expression_solving_time=numpy.nan):
         self.total_time = total_time
         self.analysis_time = analysis_time
         self.memory = memory

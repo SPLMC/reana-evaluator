@@ -80,3 +80,9 @@ CONFIGURATIONS = {}
 CONFIGURATIONS.update(FEATURE_BASED)
 CONFIGURATIONS.update(PRODUCT_BASED)
 CONFIGURATIONS.update(FAMILY_BASED)
+
+#CONFIGURATIONS = {
+#        ("MinePump", "Family-based"): get_executable("Family-based", "MinePump"),
+#        ("MinePump", "Family-product-based"): get_executable("Family-product-based", "MinePump"),
+#        ("Cloud", "Product-based"): get_executable("Product-based", "Cloud")
+#   }

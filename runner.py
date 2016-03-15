@@ -121,5 +121,9 @@ def _parse_elapsed_model_checking_time(stats_str):
 
 def _parse_elapsed_expression_solving_time(stats_str):
     pattern = re.compile(r"Expression solving time: (\d+\.?\d*) ms\n")
-    matched = pattern.search(stats_str).group(1)
-    return float(matched)
+    mo = pattern.search(stats_str)
+    if mo is not None:
+        matched = mo.group(1)
+        return float(matched)
+    else:
+        return -1.0
