@@ -9,3 +9,14 @@ Likewise, the behavioral models for the subject SPLs need to be placed under `mo
 Configurations such as executable path and its command-line arguments may be manually
 changed in the `configurations.py` module.
 The pairs of SPL and strategy to be tested are also defined there.
+
+## Dependencies
+
+This evaluation script depends on the SciPy, NumPy and Matplotlib packages.
+They can be installed using _pip_ (as _root_):
+
+```bash
+$ pip install matplotlib
+$ pip install numpy
+$ pip install scipy
+```
