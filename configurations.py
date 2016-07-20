@@ -29,23 +29,29 @@ ANALYSIS_STRATEGIES = {
 
 
 SPL = namedtuple("SPL", ["uml_model", "feature_model"])
+AVAILABLE_SPL={}
 
-AVAILABLE_SPL = {
-        "BSN": SPL(uml_model="BSN_models_without_File.xml",
-                   feature_model="BSN-FM_without_file.txt"),
-        "Email": SPL(uml_model="Email.xml",
-                     feature_model="email-FM.txt"),
-        "Cloud": SPL(uml_model="CloudComputing.xml",
-                     feature_model="CNF_CloudComputing.txt"),
-        "Lift": SPL(uml_model="LiftSystem.xml",
-                    feature_model="CNF_LiftSystem.txt"),
-        "MinePump": SPL(uml_model="MinePump.xml",
-                        feature_model="CNF_MinePump.txt"),
-        "TankWar": SPL(uml_model="TankWar.xml",
-                       feature_model="CNF_Tankwar.txt"),
-    }
+with open("available_spl") as fp:
+     for line in fp:
+        AVAILABLE_SPL[line.split(",", 3)[0]]=SPL(uml_model= line.split(",", 3)[1], feature_model=line.split(",", 3)[2])
+       
+        
+    
+#AVAILABLE_SPL = {
+#        "BSN": SPL(uml_model="BSN_models_without_File.xml",
+#                   feature_model="BSN-FM_without_file.txt"),
+#        "Email": SPL(uml_model="Email.xml",
+#                     feature_model="email-FM.txt"),
+#        "Cloud": SPL(uml_model="CloudComputing.xml",
+#                     feature_model="CNF_CloudComputing.txt"),
+#        "Lift": SPL(uml_model="LiftSystem.xml",
+#                    feature_model="CNF_LiftSystem.txt"),
+#        "MinePump": SPL(uml_model="MinePump.xml",
+#                        feature_model="CNF_MinePump.txt"),
+        
+#    }
 
-
+print AVAILABLE_SPL
 def get_arg_for_strategy(strategy):
     return "--analysis-strategy="+ANALYSIS_STRATEGIES[strategy]
 
@@ -68,14 +74,14 @@ def get_executable(strategy, spl):
 FEATURE_BASED = {(spl, strategy): get_executable(strategy, spl)
         for strategy, spl in product(["Feature-family-based", "Feature-product-based"],
                                      AVAILABLE_SPL)}
-del FEATURE_BASED[("TankWar", "Feature-product-based")]
+#del FEATURE_BASED[("TankWar", "Feature-product-based")]
 
 PRODUCT_BASED = {(spl, "Product-based"): get_executable("Product-based", spl)
-        for spl in ["BSN", "Email", "Lift", "MinePump"]}
+        for spl in AVAILABLE_SPL.keys()}
 
 FAMILY_BASED = {(spl, strategy): get_executable(strategy, spl)
         for strategy, spl in product(["Family-based", "Family-product-based"],
-                                     ["BSN", "Email", "Lift"])}
+                                    AVAILABLE_SPL)}
 
 CONFIGURATIONS = {}
 CONFIGURATIONS.update(FEATURE_BASED)

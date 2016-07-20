@@ -2,7 +2,7 @@
 import numpy
 import matplotlib.pyplot as plt
 from collections import OrderedDict
-
+from configurations import AVAILABLE_SPL
 
 def stats_to_list(stat_name, stats_list):
     return map(lambda stats: getattr(stats, stat_name),
@@ -46,23 +46,26 @@ def plot_aggregate(all_stats, prop, label, criterion, path_placer, plot_infinity
     plt.ylabel(label)
 
     if criterion == 'features':
-        keys = [
-                "Email",
-                "Lift",
-                "MinePump",
-                "BSN",
-                "Cloud",
-                "TankWar"
-                ]
+        keys=AVAILABLE_SPL.keys()
+        #keys = [
+        #        "Email",
+        #       "Lift",
+        #        "MinePump",
+        #        "BSN",
+        #        "Cloud",
+        #        "TankWar"
+        #        ]
     elif criterion == 'configurations':
-        keys = [
-                "Email",
-                "MinePump",
-                "BSN",
-                "Lift",
-                "Cloud",
-                "TankWar"
-                ]
+        keys=AVAILABLE_SPL.keys()
+        
+        #keys = [
+        #        "Email",
+        #        "MinePump",
+        #        "BSN",
+        #        "Lift",
+        #        "Cloud",
+        #        "TankWar"
+        #        ]
     max_means = 0
 
     lines = ['--', '-.', ':', ('-', [8,4,2,4,2,4]), '-']
@@ -122,24 +125,11 @@ def plot_aggregate_boxplots(all_stats, prop, label, criterion, path_placer, plot
     plt.ylabel(label)
 
     if criterion == 'features':
-        keys = [
-                "Email",
-                "Lift",
-                "MinePump",
-                "BSN",
-                "Cloud",
-                "TankWar"
-                ]
+        keys=AVAILABLE_SPL.keys()
+        
     elif criterion == 'configurations':
-        keys = [
-                "Email",
-                "MinePump",
-                "BSN",
-                "Lift",
-                "Cloud",
-                "TankWar"
-                ]
-
+          keys=AVAILABLE_SPL.keys()
+        
     colors = ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow']
 
     positions = dict()
@@ -199,23 +189,12 @@ def plot_aggregate_barplots(all_stats, prop, label, criterion, path_placer, plot
     plt.ylabel(label)
 
     if criterion == 'features':
-        keys = [
-                "Email",
-                "Lift",
-                "MinePump",
-                "BSN",
-                "Cloud",
-                "TankWar"
-                ]
+         keys=AVAILABLE_SPL.keys()
+         
+                 
     elif criterion == 'configurations':
-        keys = [
-                "Email",
-                "MinePump",
-                "BSN",
-                "Lift",
-                "Cloud",
-                "TankWar"
-                ]
+          
+          keys=AVAILABLE_SPL.keys()
     max_means = 0
 
     colors = ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow']
