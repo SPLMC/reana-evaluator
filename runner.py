@@ -127,3 +127,36 @@ def _parse_elapsed_expression_solving_time(stats_str):
         return float(matched)
     else:
         return -1.0
+    
+def run_r_script(RESULTS_DIR,input_file):
+    'Runs R script for factorial design'
+    print "Runnin R Script"
+    try:
+        # Define command and arguments
+        
+       
+        
+        output_file=RESULTS_DIR+"/result.txt"
+        
+        script_dir=os.getcwd()
+        command='Rscript'
+        path2script=script_dir+'/factorial-design.R'
+
+        args=['-i',input_file,'-o',output_file,'-d',',','-v','false']
+        # Build subprocess command
+        cmd = [command, path2script]+args 
+        print "Command ",cmd
+        
+        
+        # check_output will run the command and store to result
+        x = subprocess.check_output(cmd, universal_newlines=True)
+        print x
+        print 'Rscript execution finished'
+       
+        
+    except subprocess.CalledProcessError as e:
+        print 'Rscript error'
+        print e
+        print e.output
+        return None
+    

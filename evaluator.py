@@ -2,11 +2,12 @@
 # coding=utf-8
 
 from dataanalyzer import descriptive_analysis, test_hypotheses
-from runner import run_all_analyses
+from runner import run_all_analyses, run_r_script
 import replay
 
 import argparse
 import os
+
 
 from datetime import datetime
 
@@ -51,3 +52,7 @@ if __name__ == '__main__':
 
     descriptive_analysis(all_stats, path_placer=in_results)
     test_hypotheses(all_stats)
+    data_file=os.getcwd()+"/"+RESULTS_DIR+"/data.csv"
+    data_file=replay.generate_csv(all_stats,data_file)
+    run_r_script(os.getcwd()+"/"+RESULTS_DIR,data_file)                
+    

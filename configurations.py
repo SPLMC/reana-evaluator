@@ -28,14 +28,21 @@ ANALYSIS_STRATEGIES = {
     }
 
 
-SPL = namedtuple("SPL", ["uml_model", "feature_model"])
+SPL = namedtuple("SPL", ["uml_model", "feature_model","factor1_name","factor1_level","factor2_name","factor2_level"])
 AVAILABLE_SPL={}
 
 with open("available_spl") as fp:
+     
+     
+     
      for line in fp:
-        AVAILABLE_SPL[line.split(",", 3)[0]]=SPL(uml_model= line.split(",", 3)[1], feature_model=line.split(",", 3)[2])
-       
-        
+        print len(line.split(",", 8))
+        if(len(line.split(",", 8))>=8):
+            AVAILABLE_SPL[line.split(",", 8)[0]]=SPL(uml_model= line.split(",",8)[1], feature_model=line.split(",", 8)[2],factor1_name=line.split(",", 8)[3],factor1_level=line.split(",", 8)[4],factor2_name=line.split(",", 8)[5],factor2_level=line.split(",", 8)[6])
+        elif(len(line.split(",", 8))>=4):
+            print line.split(",", 8)
+            AVAILABLE_SPL[line.split(",", 8)[0]]=SPL(uml_model= line.split(",",8)[1], feature_model=line.split(",", 8)[2],factor1_name='',factor1_level='',factor2_name='',factor2_level='')    
+    
     
 #AVAILABLE_SPL = {
 #        "BSN": SPL(uml_model="BSN_models_without_File.xml",
