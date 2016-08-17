@@ -142,7 +142,7 @@ def run_r_script(RESULTS_DIR,input_file):
         command='Rscript'
         path2script=script_dir+'/factorial-design.R'
 
-        args=['-i',input_file,'-o',output_file,'-d',',','-v','false']
+        args=['-i',input_file,'-o',output_file,'-d','.','-v','false']
         # Build subprocess command
         cmd = [command, path2script]+args 
         print "Command ",cmd
