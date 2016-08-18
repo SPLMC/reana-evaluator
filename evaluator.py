@@ -8,7 +8,6 @@ import replay
 import argparse
 import os
 
-
 from datetime import datetime
 
 in_results = lambda filename: os.path.join(RESULTS_DIR, filename)
@@ -44,12 +43,12 @@ if __name__ == '__main__':
     if args.replay_dir is None:
         RESULTS_DIR = "results-"+ datetime.now().isoformat()
         os.mkdir(RESULTS_DIR)
-        all_stats = run_all_analyses(args.num_runs)
+        all_stats = run_all_analyses(args.num_runs,in_results("replay.json"))
         replay.save(all_stats, in_results("replay.json"))
     else:
         RESULTS_DIR = args.replay_dir
         all_stats = replay.load(in_results("replay.json"))
-
+   
     descriptive_analysis(all_stats, path_placer=in_results)
     test_hypotheses(all_stats)
     data_file=os.getcwd()+"/"+RESULTS_DIR+"/data.csv"

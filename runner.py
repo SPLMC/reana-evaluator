@@ -3,12 +3,13 @@ import os
 import re
 import simplejson as json
 import subprocess
+import replay
 
 from configurations import CONFIGURATIONS, CWD
 from stats import AllStats, CummulativeStats, Stats
+from dataanalyzer import descriptive_analysis, test_hypotheses
 
-
-def run_all_analyses(number_of_runs):
+def run_all_analyses(number_of_runs,in_results):
     '''
     Runs all analyses for all SPLs and returns an AllStats object.
     '''
@@ -19,6 +20,10 @@ def run_all_analyses(number_of_runs):
         print "---------"
         stats = run_analysis(spl, strategy, command_line, number_of_runs)
         all_stats.append(stats)
+        print "Flushing data to replay"
+        replay.save(AllStats(all_stats), in_results)
+        #descriptive_analysis(AllStats(all_stats), path_placer=in_results)
+        test_hypotheses(AllStats(all_stats))
         print "===================================="
     return AllStats(all_stats)
 

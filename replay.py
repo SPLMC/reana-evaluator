@@ -31,6 +31,7 @@ def save(all_stats, filename):
 
     :type all_stats: AllStats
     '''
+    
     raw_data = _dump_cummulative_stats(all_stats.data)
     with open(filename, 'w') as dest:
         dest.write(json.dumps(raw_data))

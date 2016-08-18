@@ -74,7 +74,7 @@ def test_hypotheses(all_stats):
                                      stat_name)
             aggregated_details[spl] = details
         pprint.pprint(aggregated_details, indent=2)
-
+       
 
 def _test_spl_stat(spl, stats_by_strategy, stat_name):
     samples_by_strategy = {strategy: stats_to_list(stat_name, stat_list)
