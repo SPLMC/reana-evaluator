@@ -2,7 +2,7 @@
 import numpy
 import matplotlib.pyplot as plt
 from collections import OrderedDict
-from configurations import AVAILABLE_SPL
+from configurations import SPL_ORDER
 
 def stats_to_list(stat_name, stats_list):
     return map(lambda stats: getattr(stats, stat_name),
@@ -46,7 +46,7 @@ def plot_aggregate(all_stats, prop, label, criterion, path_placer, plot_infinity
     plt.ylabel(label)
 
     if criterion == 'features':
-        keys=AVAILABLE_SPL.keys()
+        keys=SPL_ORDER
         #keys = [
         #        "Email",
         #       "Lift",
@@ -56,7 +56,7 @@ def plot_aggregate(all_stats, prop, label, criterion, path_placer, plot_infinity
         #        "TankWar"
         #        ]
     elif criterion == 'configurations':
-        keys=AVAILABLE_SPL.keys()
+        keys=SPL_ORDER
         
         #keys = [
         #        "Email",
@@ -125,10 +125,10 @@ def plot_aggregate_boxplots(all_stats, prop, label, criterion, path_placer, plot
     plt.ylabel(label)
 
     if criterion == 'features':
-        keys=AVAILABLE_SPL.keys()
+        keys=SPL_ORDER
         
     elif criterion == 'configurations':
-          keys=AVAILABLE_SPL.keys()
+          keys=SPL_ORDER
         
     colors = ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow']
 
@@ -189,12 +189,12 @@ def plot_aggregate_barplots(all_stats, prop, label, criterion, path_placer, plot
     plt.ylabel(label)
 
     if criterion == 'features':
-         keys=AVAILABLE_SPL.keys()
+         keys=SPL_ORDER
          
                  
     elif criterion == 'configurations':
           
-          keys=AVAILABLE_SPL.keys()
+          keys=SPL_ORDER
     max_means = 0
 
     colors = ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow']
