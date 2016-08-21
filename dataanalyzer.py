@@ -6,37 +6,48 @@ import pprint
 
 from plotter import *
 
-
 SIGNIFICANCE = 0.01
 NORMALITY_TEST = normaltest
 #NORMALITY_TEST = shapiro
 
 
 def descriptive_analysis(all_stats, path_placer=lambda path: path):
-    for criterion in ['features', 'configurations']:
-        plot_aggregate_barplots(all_stats, "analysis_time", "Analysis time (ms)", criterion, path_placer, plot_infinity=False, limit_padding=1.2, log=True)
-        plot_aggregate_barplots(all_stats, "memory", "Peak memory (MB)", criterion, path_placer, plot_infinity=False, log=False)
-        plot_aggregate_boxplots(all_stats, "analysis_time", "Analysis time (ms)", criterion, path_placer, plot_infinity=False, limit_padding=1.2, log=True, minimum=0.1)
-        plot_aggregate_boxplots(all_stats, "memory", "Peak memory (MB)", criterion, path_placer, plot_infinity=False, log=False)
+    criterion='configurations'
+    #for criterion in ['features', 'configurations']:
+        
+    plot_aggregate_barplots(all_stats, "analysis_time", "Analysis time (ms)", criterion, path_placer, plot_infinity=False, limit_padding=1.2, log=True)
+    plot_aggregate_barplots(all_stats, "memory", "Peak memory (MB)", criterion, path_placer, plot_infinity=False, log=False)
+    plot_aggregate_boxplots(all_stats, "analysis_time", "Analysis time (ms)", criterion, path_placer, plot_infinity=False, limit_padding=1.2, log=True, minimum=0.1)
+    plot_aggregate_boxplots(all_stats, "memory", "Peak memory (MB)", criterion, path_placer, plot_infinity=False, log=False)
+    plot_aggregate_barplots(all_stats, "elapsed_model_checking_time", "Model checking time (ms)", criterion, path_placer, plot_infinity=False, log=False)
+    plot_aggregate_barplots(all_stats, "elapsed_expression_solving_time", "Expression solving time (ms)", criterion, path_placer, plot_infinity=False, log=False)
+    plot_aggregate_barplots(all_stats, "elapsed_model_checking_time", "Model checking time (ms)", criterion, path_placer, plot_infinity=False, log=True)
+    plot_aggregate_barplots(all_stats, "elapsed_expression_solving_time", "Expression solving time (ms)", criterion, path_placer, plot_infinity=False, log=True)
+        
+       
+        
+    plot_aggregate(all_stats, "analysis_time", "Analysis time (ms)", criterion, path_placer, plot_infinity=False, limit_padding=1.6)
+    plot_aggregate(all_stats, "total_time", "Total time (ms)", criterion, path_placer, plot_infinity=False, limit_padding=1.6)
+    plot_aggregate(all_stats, "memory", "Peak memory (MB)", criterion, path_placer, plot_infinity=False, log=False)
+    plot_aggregate(all_stats, "elapsed_model_checking_time", "Model checking time (ms)", criterion, path_placer, plot_infinity=False, log=False)
 
-        plot_aggregate(all_stats, "analysis_time", "Analysis time (ms)", criterion, path_placer, plot_infinity=False, limit_padding=1.6)
-        plot_aggregate(all_stats, "total_time", "Total time (ms)", criterion, path_placer, plot_infinity=False, limit_padding=1.6)
-        plot_aggregate(all_stats, "memory", "Peak memory (MB)", criterion, path_placer, plot_infinity=False, log=False)
+        
 
     props = ["analysis_time",
              "memory"]
 
     for spl in all_stats.get_spls():
         stats_by_spl = all_stats.get_stats_by_spl(spl)
-        plot_time(stats_by_spl,
+        if(len(stats_by_spl)>0):
+            plot_time(stats_by_spl,
                   spl,
                   path_placer)
-        for prop in props:
-            boxplot_property(stats_by_spl,
+            for prop in props:
+                boxplot_property(stats_by_spl,
                              spl,
                              prop,
                              path_placer)
-            boxplot_property(stats_by_spl,
+                boxplot_property(stats_by_spl,
                              spl+"-logarithmic",
                              prop,
                              path_placer,
@@ -44,15 +55,16 @@ def descriptive_analysis(all_stats, path_placer=lambda path: path):
 
     for strategy in all_stats.get_strategies():
         stats_by_strategy = all_stats.get_stats_by_strategy(strategy)
-        plot_time(stats_by_strategy,
-                  strategy,
-                  path_placer)
-        for prop in props:
-            boxplot_property(stats_by_strategy,
+        if(len(stats_by_strategy)>0):
+            plot_time(stats_by_strategy,
+                      strategy,
+                      path_placer)
+            for prop in props:
+                boxplot_property(stats_by_strategy,
                              strategy,
                              prop,
                              path_placer)
-            boxplot_property(stats_by_strategy,
+                boxplot_property(stats_by_strategy,
                              strategy+"-logarithmic",
                              prop,
                              path_placer,

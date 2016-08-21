@@ -110,7 +110,7 @@ def plot_aggregate(all_stats, prop, label, criterion, path_placer, plot_infinity
                )
     plt.legend(loc='lower center', ncol=3, bbox_to_anchor=(0.5, 1.01))
     #plt.legend(loc='center left', ncol=1, bbox_to_anchor=(1.02, 0.5))
-    plt.axis([0.7, 6.3, minimum, max_means*limit_padding])
+    plt.axis([0.7,len(all_stats.get_spls())+1, minimum, max_means*limit_padding])
 
     plt.savefig(path_placer('mean-'+prop+'-'+criterion+'_ascending-'+('logarithmic-' if log else '')+'ALL.png'),
                 format="png",
@@ -218,6 +218,8 @@ def plot_aggregate_barplots(all_stats, prop, label, criterion, path_placer, plot
         specific_positions = list()
 
         stats_by_strategy = all_stats.get_stats_by_strategy(strategy)
+        
+        
         for spl, stats in stats_by_strategy.iteritems():
             vals = stats_to_list(prop, stats)
             mean = numpy.mean(vals)

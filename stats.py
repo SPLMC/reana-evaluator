@@ -1,7 +1,7 @@
 # coding=utf-8
 from collections import OrderedDict
 import numpy
-
+from configurations import SPL_ORDER,ANALYSIS_STRATEGIES 
 
 class AllStats(object):
     '''
@@ -22,24 +22,29 @@ class AllStats(object):
         Returns all stats for the given strategy, indexed by
         the analyzed SPL.
         '''
-        indexed = {stats.spl: stats.data for stats in self.data
-                    if stats.strategy == strategy}
-        return OrderedDict(sorted(indexed.items()))
+        indexed=OrderedDict()
+        for spl in SPL_ORDER:
+            for stats in self.data:
+                if (stats.strategy == strategy and stats.spl == spl):
+                    indexed.update({stats.spl: stats.data}) 
+               
+        return indexed
 
     def get_stats_by_spl(self, spl):
         '''
         Returns all stats for the given SPL, indexed by
         the analysis strategy.
         '''
-        indexed = {stats.strategy: stats.data for stats in self.data
-                    if stats.spl == spl}
-        strategies = ["Feature-family-based",
-                      "Feature-product-based",
-                      "Product-based",
-                      "Family-based",
-                      "Family-product-based"]
-        return OrderedDict(sorted(indexed.items(),
-                                  key=lambda item: strategies.index(item[0])))
+        
+        indexed=OrderedDict()
+        for strategy in ANALYSIS_STRATEGIES:
+            for stats in self.data:
+                if (stats.strategy == strategy and stats.spl == spl):
+                    indexed.update({stats.strategy: stats.data}) 
+               
+        return indexed
+        
+        
 
 
 class CummulativeStats(object):
