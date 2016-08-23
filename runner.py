@@ -1,9 +1,11 @@
 # coding=utf-8
 import os
+import sys
 import re
 import simplejson as json
 import subprocess
 import replay
+import traceback
 
 from configurations import CONFIGURATIONS, CWD
 from stats import AllStats, CummulativeStats, Stats
@@ -15,16 +17,22 @@ def run_all_analyses(number_of_runs,in_results):
     '''
     all_stats = []
     for (spl, strategy), command_line in CONFIGURATIONS.iteritems():
-        name = strategy + " ("+spl+")"
-        print name
-        print "---------"
-        stats = run_analysis(spl, strategy, command_line, number_of_runs)
-        all_stats.append(stats)
-        print "Flushing data to replay"
-        replay.save(AllStats(all_stats), in_results)
-        #descriptive_analysis(AllStats(all_stats), path_placer=in_results)
-        test_hypotheses(AllStats(all_stats))
-        print "===================================="
+        try:
+            name = strategy + " ("+spl+")"
+            print name
+            print "---------"
+            stats = run_analysis(spl, strategy, command_line, number_of_runs)
+           
+            all_stats.append(stats)
+            print "Flushing data to replay"
+            replay.save(AllStats(all_stats), in_results)
+            test_hypotheses(AllStats(all_stats))
+            print "===================================="
+        except:
+            print "Unexpected error:", sys.exc_info()[0],sys.exc_info()[1]
+            traceback.print_tb(sys.exc_info()[2], limit=None, file=None)
+            print "Error running analysis"
+               
     return AllStats(all_stats)
 
 
@@ -46,7 +54,7 @@ def _run_for_stats(command_line):
     except subprocess.CalledProcessError as e:
         print e
         print e.output
-        return None
+        raise
     print output
     result = _parse_stats(output)
     print result

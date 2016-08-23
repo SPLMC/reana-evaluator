@@ -40,6 +40,7 @@ def plot_time(stats, name, path_placer=lambda path: path):
 
 
 def plot_aggregate(all_stats, prop, label, criterion, path_placer, plot_infinity=True, log=True, limit_padding=1.1, minimum=10):
+    
     plt.figure()
     if log:
         plt.yscale('log')
@@ -213,29 +214,30 @@ def plot_aggregate_barplots(all_stats, prop, label, criterion, path_placer, plot
 
     i = 0
     for strategy in all_stats.get_strategies():
-        means = list()
-        labels = list()
-        specific_positions = list()
+        if (not (strategy=='Product-based' and prop=='elapsed_expression_solving_time')):
+            means = list()
+            labels = list()
+            specific_positions = list()
 
-        stats_by_strategy = all_stats.get_stats_by_strategy(strategy)
+            stats_by_strategy = all_stats.get_stats_by_strategy(strategy)
         
         
-        for spl, stats in stats_by_strategy.iteritems():
-            vals = stats_to_list(prop, stats)
-            mean = numpy.mean(vals)
-            max_means = max(max_means, mean)
-            means.append(mean)
-            labels.append(spl + " " + strategy)
-            position = positions[spl][strategy]
-            specific_positions.append(position)
+            for spl, stats in stats_by_strategy.iteritems():
+                vals = stats_to_list(prop, stats)
+                mean = numpy.mean(vals)
+                max_means = max(max_means, mean)
+                means.append(mean)
+                labels.append(spl + " " + strategy)
+                position = positions[spl][strategy]
+                specific_positions.append(position)
 
-        plt.bar(specific_positions,
-                 means,
-                 label=strategy[:-6],
-                 color=colors[i],
-                 edgecolor='white'
-                 )
-        i += 1
+                plt.bar(specific_positions,
+                         means,
+                         label=strategy[:-6],
+                         color=colors[i],
+                         edgecolor='white'
+                         )
+            i += 1
 
     plt.xticks(x_ticks,
                keys,

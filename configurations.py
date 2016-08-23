@@ -1,6 +1,6 @@
 # coding=utf-8
 
-import os.path
+import os.path, sys
 from collections import namedtuple, OrderedDict
 from itertools import product
 
@@ -14,12 +14,12 @@ REANA_ROOT = TOOLS_PATH
 PARAM_PATH = os.path.join(TOOLS_PATH, "param")
 MODELS_PATH = "models"
 CWD = '.'
-
+SCRIPT_PATH= os.path.dirname(sys.argv[0])
 JAR = os.path.join(REANA_ROOT, "reana-spl.jar")
 REANA_MAIN = "java -Xss100m -jar "+JAR+" --all-configurations --suppress-report --stats --param-path="+PARAM_PATH
 
 ANALYSIS_STRATEGIES =OrderedDict()
-with open("analysis_strategies") as fp:
+with open(SCRIPT_PATH+"/analysis_strategies") as fp:
      
      for line in fp:
         
@@ -32,7 +32,7 @@ SPL = namedtuple("SPL", ["uml_model", "feature_model","factor1_name","factor1_le
 SPL_ORDER=[]
 AVAILABLE_SPL={}
 
-with open("available_spl") as fp:
+with open(SCRIPT_PATH+"/available_spl") as fp:
      
      
      
