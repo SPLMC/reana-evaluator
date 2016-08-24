@@ -16,7 +16,7 @@ MODELS_PATH = "models"
 CWD = '.'
 SCRIPT_PATH= os.path.dirname(sys.argv[0])
 JAR = os.path.join(REANA_ROOT, "reana-spl.jar")
-REANA_MAIN = "java -Xss100m -jar "+JAR+" --all-configurations --suppress-report --stats --param-path="+PARAM_PATH
+REANA_MAIN = "java -Xss100m -Xmx8g -jar "+JAR+" --all-configurations --suppress-report --stats --param-path="+PARAM_PATH
 
 ANALYSIS_STRATEGIES =OrderedDict()
 with open(SCRIPT_PATH+"/analysis_strategies") as fp:
